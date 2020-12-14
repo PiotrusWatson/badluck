@@ -21,54 +21,42 @@ public class MovementController : MonoBehaviour
     Collider feet;
     public PhysicMaterial slidePhysics;
     PhysicMaterial walkPhysics;
-    InputController inputController;
-    
-    GravityController gravityController;
 
 
 
-    bool isSliding = false;
+
+    public bool isSliding = false;
     
-    
+    float horizontalInput, verticalInput;
     // Start is called before the first frame update
     void Awake()
     {   
         
         groundedChecker = GetComponentInChildren<GroundedChecker>();
         rigidBody = GetComponent<Rigidbody>();
-        inputController = GetComponent<InputController>();
         feet = GetComponent<Collider>();
-        gravityController = GetComponent<GravityController>();
         walkPhysics = feet.material;
     }
 
 
-    void Update(){
-
-       if (Input.GetButtonUp("ChangeGravity")){ 
-           Transform cameraTransform = Camera.main.transform;
-           gravityController.ChangeGravity(cameraTransform.forward, cameraTransform.right * -1);
-       }
-
-        if (Input.GetButton("Slide")){
-            SetSliding(true);
-        }
-        
-        if (Input.GetButtonUp("Slide")){
-            SetSliding(false);
-        }
-
+  
+    public Vector3 GetDesiredMovement(Vector3 initialMovement){
+        initialMovement += transform.forward * verticalInput;
+        initialMovement += transform.right * horizontalInput;
+        return initialMovement;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
+    //has to be called every physics frame to make sense
+    public void Move(float horizontalMove, float verticalMove){
+        horizontalInput = horizontalMove;
+        verticalInput = verticalMove; 
         if (isSliding && groundedChecker.isGrounded){
             return;
         }
-        Vector3 desiredMovement = inputController.GetMovementInput(Vector3.zero);
-        //ground movement :)
-        if (groundedChecker.isGrounded){
+        
+         Vector3 desiredMovement = GetDesiredMovement(Vector3.zero);
+
+         if (groundedChecker.isGrounded){
             Vector3 newVelocity = GetAcceleration(desiredMovement, groundSpeedLimit, groundAcceleration);
             rigidBody.velocity += newVelocity;
 
@@ -77,16 +65,10 @@ public class MovementController : MonoBehaviour
             Vector3 newVelocity = GetAcceleration(desiredMovement, airSpeedLimit, airAcceleration);
             rigidBody.velocity += newVelocity;
         }
-
-
-        //air movement :(
-        
-
         
     }
 
-
-
+// stolen from quake 1. makes bhop happen :)
     Vector3 GetAcceleration(Vector3 desiredMovement, float speedLimit, float acceleration){
 
         //get speed by multiplying all the stuff together n adding it
@@ -113,7 +95,7 @@ public class MovementController : MonoBehaviour
     }
 
 
-    void SetSliding(bool isSliding){
+    public void SetSliding(bool isSliding){
         if (isSliding){
             feet.material = slidePhysics;
         }

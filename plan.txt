@@ -1,0 +1,42 @@
+two good game ideas
+
+BURLY BRAWL
+
+PRESS F TO SWITCH GRAVITY to face WHERE YOU'RE LOOKING AT
+HAVE BUNNYHOP QUAKE
+
+
+
+
+FIRST PERSON
+MATRIX LOBBY SCENE
+
+SOME GOONS
+3 TYPE OF GOON
+
+GHOSTBUSTER AOE MAN
+GOON THAT SHOOTS PROJECTILE SPRAY GUN
+GOON THAT SHOOTS NETS/MAGICAL MAGICAL MAGNET
+
+GOONS COME AT YOU IN WAVES
+MUST SEE FEET
+
+
+kick
+SHOCK RIFLE
+BIG FUCKOFF SHOTGUN
+
+STRETCH GOALS
+
+PARRY SHIELD RAMMING SPEED
+
+
+- fire laser from consistent point following player
+- find surface.
+
+- for rotation, do at end (fire ray, check distance, when close - rotate)
+or lerp
+or both
+- 
+- gravity flibble 
+- 

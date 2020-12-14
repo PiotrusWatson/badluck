@@ -12,6 +12,7 @@ public class JumpController : MonoBehaviour
 
     Rigidbody rigidBody;
     GroundedChecker groundedChecker;
+    MovementController movementController;
     bool jumpInput;
 
 
@@ -20,12 +21,11 @@ public class JumpController : MonoBehaviour
     bool willJump = false;
     bool isDiving = false;
 
-    InputController inputController;
     // Start is called before the first frame update
     void Awake()
     {
+        movementController = GetComponent<MovementController>();
         groundedChecker = GetComponentInChildren<GroundedChecker>();
-        inputController = GetComponent<InputController>();
         rigidBody = GetComponent<Rigidbody>();
     }
 
@@ -58,7 +58,7 @@ public class JumpController : MonoBehaviour
     }
 
     Vector3 CalculateDive(){
-        Vector3 push = inputController.GetMovementInput(Vector3.zero);
+        Vector3 push = movementController.GetDesiredMovement(Vector3.zero);
         return new Vector3(push.x, diveHeight, push.z) * diveForce;
     }
 

@@ -3231,30 +3231,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 128657069, guid: 89a236c9566f6f94d815a7701f9f5378, type: 3}
-      propertyPath: gravityStrength
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 66292506313712273, guid: 89a236c9566f6f94d815a7701f9f5378,
-        type: 3}
-      propertyPath: jumpForce
-      value: 600
-      objectReference: {fileID: 0}
-    - target: {fileID: 66292506313712273, guid: 89a236c9566f6f94d815a7701f9f5378,
-        type: 3}
-      propertyPath: jumpHeight
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 66292506313712273, guid: 89a236c9566f6f94d815a7701f9f5378,
-        type: 3}
-      propertyPath: diveHeight
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 66292506313712273, guid: 89a236c9566f6f94d815a7701f9f5378,
-        type: 3}
-      propertyPath: diveForce
-      value: 600
-      objectReference: {fileID: 0}
     - target: {fileID: 7211482261689574658, guid: 89a236c9566f6f94d815a7701f9f5378,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3315,7 +3291,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 640414386, guid: 89a236c9566f6f94d815a7701f9f5378, type: 3}
-    - {fileID: 1490028560, guid: 89a236c9566f6f94d815a7701f9f5378, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89a236c9566f6f94d815a7701f9f5378, type: 3}
