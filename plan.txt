@@ -30,13 +30,15 @@ STRETCH GOALS
 
 PARRY SHIELD RAMMING SPEED
 
-
-- fire laser from consistent point following player
-- find surface.
-
-- for rotation, do at end (fire ray, check distance, when close - rotate)
+- problem: we're gonna climb up enemies
+- for rotation, do at end (fire ray, check distance, when close - rotate) X
 or lerp
 or both
-- 
+- maybe slow it down
+- counter rotation/mouse lock
 - gravity flibble 
-- 
+- ui indication of where you're gonna go
+	- particle indication
+	- long flowing mistborn
+	
+FALL THROUGH FLOOR PLS FIX
