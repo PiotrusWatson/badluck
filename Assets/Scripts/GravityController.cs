@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GravityController : MonoBehaviour
 {
+    [HideInInspector]
+    public Transform mouseHack;
     public float gravityStrength;
     public bool isEnabled = true;
     public float distanceToRotate;
@@ -13,19 +15,16 @@ public class GravityController : MonoBehaviour
     MouseLook mouseLook;
     RaycastHit currentSurface;
 
-    public Vector3 xAxis;
-    public Vector3 yAxis;
-
 
     bool weAreChangingGravity;
     // Start is called before the first frame update
     void Awake()
     {
-        xAxis = Vector3.right;
-        yAxis = Vector3.up;
+        mouseHack = Instantiate(new GameObject()).transform;
         rigidBody = GetComponent<Rigidbody>();
         gravityDirection = Vector3.down;
         mouseLook = GetComponentInChildren<MouseLook>();
+
     }
 
     // Update is called once per frame
@@ -42,14 +41,13 @@ public class GravityController : MonoBehaviour
             Quaternion whereWeWereLooking = mouseLook.transform.rotation;
             if (Vector3.Distance(transform.position, whatDidIHit.point) <= distanceToRotate){
                 // ensure feet are on ground by setting gravity to - ground
-                yAxis = whatDidIHit.normal;
-                xAxis = CalculateXAxis(gravityDirection, yAxis);
-                gravityDirection = yAxis * -1;
+                gravityDirection =  whatDidIHit.normal * -1;
 
                 
                 Quaternion whereWereRotating = Quaternion.FromToRotation(Vector3.up, whatDidIHit.normal);
                 transform.rotation = whereWereRotating;
-                mouseLook.transform.rotation = Quaternion.identity;
+                mouseHack.rotation = whereWereRotating;
+               // mouseLook.transform.rotation = Quaternion.identity;
                 weAreChangingGravity = false;
             }
         }
@@ -66,7 +64,6 @@ public class GravityController : MonoBehaviour
     public void ChangeGravity(Vector3 newDirection, Vector3 axisToRotateAround){
        /* TODELTE Vector3 oldDirection = gravityDirection;
         float amountToTurn = Vector3.Angle(oldDirection, newDirection);*/ 
-        Debug.Log("Where we were looking: " + Camera.main.transform.localRotation);
         gravityDirection = newDirection;
         weAreChangingGravity = true;
 
@@ -75,13 +72,6 @@ public class GravityController : MonoBehaviour
     }
 
 
-    Vector3 CalculateZAxis(Vector3 direction, Vector3 normal){
-        return direction - Vector3.Dot(direction, normal) * normal;
-
-    }
-    Vector3 CalculateXAxis(Vector3 direction, Vector3 normal){
-        return Vector3.Cross(normal, CalculateZAxis(direction, normal));
-    }
 
     // fire ongoing laser between eyes
     // use that to get distance
