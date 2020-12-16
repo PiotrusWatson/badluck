@@ -11,12 +11,18 @@ public class GravityController : MonoBehaviour
     Vector3 gravityDirection;
     Rigidbody rigidBody;
     MouseLook mouseLook;
+    RaycastHit currentSurface;
+
+    public Vector3 xAxis;
+    public Vector3 yAxis;
 
 
     bool weAreChangingGravity;
     // Start is called before the first frame update
     void Awake()
     {
+        xAxis = Vector3.right;
+        yAxis = Vector3.up;
         rigidBody = GetComponent<Rigidbody>();
         gravityDirection = Vector3.down;
         mouseLook = GetComponentInChildren<MouseLook>();
@@ -36,12 +42,14 @@ public class GravityController : MonoBehaviour
             Quaternion whereWeWereLooking = mouseLook.transform.rotation;
             if (Vector3.Distance(transform.position, whatDidIHit.point) <= distanceToRotate){
                 // ensure feet are on ground by setting gravity to - ground
-                gravityDirection = whatDidIHit.normal * -1;
+                yAxis = whatDidIHit.normal;
+                xAxis = CalculateXAxis(gravityDirection, yAxis);
+                gravityDirection = yAxis * -1;
+
+                
                 Quaternion whereWereRotating = Quaternion.FromToRotation(Vector3.up, whatDidIHit.normal);
                 transform.rotation = whereWereRotating;
-                mouseLook.ToggleMouse(false);
                 mouseLook.transform.rotation = Quaternion.identity;
-                mouseLook.ToggleMouse(true);
                 weAreChangingGravity = false;
             }
         }
@@ -64,6 +72,15 @@ public class GravityController : MonoBehaviour
 
         
         
+    }
+
+
+    Vector3 CalculateZAxis(Vector3 direction, Vector3 normal){
+        return direction - Vector3.Dot(direction, normal) * normal;
+
+    }
+    Vector3 CalculateXAxis(Vector3 direction, Vector3 normal){
+        return Vector3.Cross(normal, CalculateZAxis(direction, normal));
     }
 
     // fire ongoing laser between eyes
