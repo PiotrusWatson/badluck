@@ -9,8 +9,17 @@ public class ShootingController : MonoBehaviour
     uint currentWeapon;
     float scrollWheel;
 
+    public float nextFireThreshold;
+    public float maxFireLength;
+    float nextFireTimer;
+    float fireLength;
+    bool isFiring;
+
+
     void Awake(){
         currentWeapon = 0;
+        fireLength = maxFireLength;
+        nextFireTimer = 0;
         
     }
 
@@ -24,28 +33,26 @@ public class ShootingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Fire1")){
+        if (fireLength < maxFireLength && isFiring){
             arsenal.Fire();
+            fireLength += Time.fixedDeltaTime;
         }
-        else if (Input.GetButtonUp("Fire1")){
-            arsenal.UnFire();
-        }
-
-        if (Input.GetButton("Fire2")){
-            arsenal.AltFire();
-        }
-        else if (Input.GetButtonUp("Fire2")){
-            arsenal.UnAltFire();
+        else if (isFiring){
+            nextFireTimer = 0;
+            isFiring = false;
         }
 
+        if (nextFireTimer < nextFireThreshold && !isFiring){
+            nextFireTimer += Time.fixedDeltaTime;
+        }
+        else if (!isFiring) {
+            isFiring = true;
+            fireLength = 0;
+        }
+        
 
-        scrollWheel = Input.GetAxis("Mouse ScrollWheel");
-        if (scrollWheel > 0){
-            Switch(currentWeapon + 1);
-        }
-        else if (scrollWheel < 0){
-            Switch(currentWeapon - 1);
-        }
+
+        
 
        
     }

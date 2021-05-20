@@ -47,32 +47,31 @@ public class HitscanWeapon : MonoBehaviour
     public void Fire()
     {
         //fire laser
-        visibleLaser.positionCount = 2;
-        bool isHit = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out whereDidIHit, range);
+        visibleLaser.positionCount = 1;
+        bool isHit = true;
+        int bounceCount = 0;
+        Vector3 startPoint = playerCamera.transform.position;
+        Vector3 direction = playerCamera.transform.forward;
         visibleLaser.SetPosition(0, transform.position);
-        if (!isHit){
-           visibleLaser.SetPosition(1, playerCamera.transform.forward * range + playerCamera.transform.position);
-           laserTimer = 0f;
-           return;
-        }
-        visibleLaser.SetPosition(1, whereDidIHit.point);
-        
-        //bouncing
-        int bounceCount = 1;
         while (isHit && bounceCount < bounceLimit){
             visibleLaser.positionCount += 1;
             bounceCount += 1;
-            Vector3 incomingLaser = whereDidIHit.point - playerCamera.transform.position;
-            Vector3 reflection = Vector3.Reflect(incomingLaser, whereDidIHit.normal);
-            isHit = Physics.Raycast(whereDidIHit.point, reflection, out whereDidIHit, range);
+            isHit = Physics.Raycast(startPoint, direction, out whereDidIHit, range);
+            
             if (!isHit){
-            visibleLaser.SetPosition(bounceCount, playerCamera.transform.forward * range + playerCamera.transform.position);
-            laserTimer = 0f;
-            return;
+                visibleLaser.SetPosition(bounceCount, direction * range + startPoint);
+                laserTimer = 0f;
+                return;
             }
             visibleLaser.SetPosition(bounceCount, whereDidIHit.point);
+            startPoint = whereDidIHit.point;
+            //reflection
+            Vector3 incomingLaser = whereDidIHit.point - playerCamera.transform.position;
+            direction = Vector3.Reflect(incomingLaser, whereDidIHit.normal);
+
         }
-        laserTimer = 0f;
+       laserTimer = 0f;
+        
     }
 
     public RaycastHit GetHitData(){
