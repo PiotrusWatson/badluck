@@ -11,7 +11,8 @@ public class ShootingController : MonoBehaviour
 
     public float nextFireThreshold;
     public float maxFireLength;
-    float nextFireTimer;
+    [HideInInspector]
+    public float nextFireTimer;
     float fireLength;
     bool isFiring;
 
