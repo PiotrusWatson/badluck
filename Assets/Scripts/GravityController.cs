@@ -8,7 +8,14 @@ public class GravityController : MonoBehaviour
     public Transform mouseHack;
     public float gravityStrength;
     public bool isEnabled = true;
+    [HideInInspector]
+    public bool isRotating;
     public float distanceToRotate;
+
+    public float maxDisableMouseTime;
+    float mouseDisableTimer;
+    bool isTiming = false;
+
     
     Vector3 gravityDirection;
     Rigidbody rigidBody;
@@ -30,11 +37,24 @@ public class GravityController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit whatDidIHit;
-        if (weAreChangingGravity){
-            bool iHitAThing = Physics.Raycast(transform.position, gravityDirection, out whatDidIHit);
+        if (mouseDisableTimer < maxDisableMouseTime && isTiming){
+            mouseDisableTimer += Time.fixedDeltaTime;
+        }
+        else if(isTiming)
+        {
+            mouseLook.ToggleMouse(true);
+            isTiming = false;
 
-        if (iHitAThing && whatDidIHit.collider.CompareTag("Level")){
+        }
+        
+        if (!weAreChangingGravity){
+            return;
+        }
+        RaycastHit whatDidIHit;
+        bool iHitAThing = Physics.Raycast(transform.position, gravityDirection, out whatDidIHit);
+
+        if (iHitAThing && whatDidIHit.collider.CompareTag("Level"))
+        {
             
             //rotation code
             //transform.Rotate(whatDidIHitnormal * amountToTurn);
@@ -43,14 +63,18 @@ public class GravityController : MonoBehaviour
                 // ensure feet are on ground by setting gravity to - ground
                 gravityDirection =  whatDidIHit.normal * -1;
 
-                
+                mouseLook.ToggleMouse(false);
+                mouseDisableTimer = 0f;
+                isTiming = true;
+
                 Quaternion whereWereRotating = Quaternion.FromToRotation(Vector3.up, whatDidIHit.normal);
                 transform.rotation = whereWereRotating;
                 mouseHack.rotation = whereWereRotating;
-               // mouseLook.transform.rotation = Quaternion.identity;
+                mouseLook.transform.rotation = Quaternion.identity;
+                
                 weAreChangingGravity = false;
+
             }
-        }
         }
     }
 
@@ -58,7 +82,7 @@ public class GravityController : MonoBehaviour
         if (isEnabled){
             rigidBody.velocity += gravityDirection * gravityStrength * Time.fixedDeltaTime;
         }
-        
+    
     }
 
     public void ChangeGravity(Vector3 newDirection, Vector3 axisToRotateAround){
