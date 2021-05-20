@@ -210,6 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laserLifeTime: 0.1
+  range: 200
+  bounceLimit: 10
 --- !u!114 &7525605537584352202
 MonoBehaviour:
   m_ObjectHideFlags: 0

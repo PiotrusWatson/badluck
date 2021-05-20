@@ -6,14 +6,12 @@ public class PlayerController : MonoBehaviour
 {
 
     MovementController movementController;
-    GravityController gravityController;
 
     float horizontalInput, verticalInput;
     // Start is called before the first frame update
     void Awake()
     {
         movementController = GetComponent<MovementController>();
-        gravityController = GetComponent<GravityController>();
         
     }
 
@@ -22,11 +20,6 @@ public class PlayerController : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetButtonUp("ChangeGravity")){ 
-           Transform cameraTransform = Camera.main.transform;
-           gravityController.ChangeGravity(cameraTransform.forward, cameraTransform.right * -1);
-       }
 
         if (Input.GetButton("Slide")){
             movementController.SetSliding(true);

@@ -10,6 +10,8 @@ public class HitscanWeapon : MonoBehaviour
     public float laserLifeTime;
     float laserTimer;
     RaycastHit whereDidIHit;
+    public float range;
+    public float bounceLimit;
 
     
 
@@ -19,7 +21,7 @@ public class HitscanWeapon : MonoBehaviour
     void Awake()
     {
         visibleLaser = GetComponent<LineRenderer>();
-        // assumes there will always be a camera somewhere above the gun. might not always be true?
+        // assumes there will always be a camera somewhere above the gun in hierarchy. might not always be true?
         playerCamera = GetComponentInParent<Camera>().gameObject;
     }
 
@@ -44,11 +46,32 @@ public class HitscanWeapon : MonoBehaviour
 
     public void Fire()
     {
-        
+        //fire laser
         visibleLaser.positionCount = 2;
-        Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out whereDidIHit);
+        bool isHit = Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out whereDidIHit, range);
         visibleLaser.SetPosition(0, transform.position);
+        if (!isHit){
+           visibleLaser.SetPosition(1, playerCamera.transform.forward * range + playerCamera.transform.position);
+           laserTimer = 0f;
+           return;
+        }
         visibleLaser.SetPosition(1, whereDidIHit.point);
+        
+        //bouncing
+        int bounceCount = 1;
+        while (isHit && bounceCount < bounceLimit){
+            visibleLaser.positionCount += 1;
+            bounceCount += 1;
+            Vector3 incomingLaser = whereDidIHit.point - playerCamera.transform.position;
+            Vector3 reflection = Vector3.Reflect(incomingLaser, whereDidIHit.normal);
+            isHit = Physics.Raycast(whereDidIHit.point, reflection, out whereDidIHit, range);
+            if (!isHit){
+            visibleLaser.SetPosition(bounceCount, playerCamera.transform.forward * range + playerCamera.transform.position);
+            laserTimer = 0f;
+            return;
+            }
+            visibleLaser.SetPosition(bounceCount, whereDidIHit.point);
+        }
         laserTimer = 0f;
     }
 
